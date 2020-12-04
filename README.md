@@ -55,7 +55,7 @@ export default function () {
 function killPod(p) {
   const victim = p.list()[0];
   console.log(`Killing pod ${victim}`);
-  p.killByName('media', victim);
+  p.killByName('default', victim);
 }
 ```
 
