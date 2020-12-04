@@ -4,10 +4,9 @@
 
 # xk6-chaos
 A k6 extension for testing for the unknown unknowns.
+Built for [k6](https://github.com/loadimpact/k6) using [xk6](https://github.com/k6io/xk6).
 
 </div>
-
-This is a [k6](https://github.com/loadimpact/k6) extension using the [xk6](https://github.com/k6io/xk6) system.
 
 > ### ⚠️ This is a proof of concept
 >
