@@ -1,3 +1,12 @@
+> ### ⚠️ This is a proof of concept
+>
+> As this is a proof of concept,  it won't be supported by the k6 team.
+> It may also break in the future as xk6 evolves. USE AT YOUR OWN RISK!
+> Any issues with the tool should be raised [here](https://github.com/simskij/xk6-chaos/issues).
+
+</br>
+</br>
+
 <div align="center">
 
 ![logo](assets/logo.png)
@@ -7,12 +16,6 @@ A k6 extension for testing for the unknown unknowns.
 Built for [k6](https://github.com/loadimpact/k6) using [xk6](https://github.com/k6io/xk6).
 
 </div>
-
-> ### ⚠️ This is a proof of concept
->
-> As this is a proof of concept,  it won't be supported by the k6 team.
-> It may also break in the future as xk6 evolves. USE AT YOUR OWN RISK!
-> Any issues with the tool should be raised [here](https://github.com/simskij/xk6-chaos/issues).
 
 ## Build
 
