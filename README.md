@@ -44,7 +44,7 @@ import chaos from 'k6/x/chaos';
 import { Pods } from 'k6/x/chaos/k8s';
 
 export default function () {
-  console.log(`Running simskij/k6-extension-chaos@${chaos.version}.`);
+  console.log(`Running simskij/xk6-chaos@${chaos.version}.`);
   const p = new Pods();
   console.log(
     `There are currently ${p.list().length} pods in the default namespace.`
@@ -80,7 +80,7 @@ $ ./k6 run script.js
   scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
            * default: 1 iterations for each of 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
 
-INFO[0000] Running simskij/k6-extension-chaos@v0.0.1.             source=console
+INFO[0000] Running simskij/xk6-chaos@v0.0.1.             source=console
 INFO[0000] There are currently 33 pods in the default namespace.  source=console
 INFO[0000] Killing pod chaos-webserver-54bd848884-ds2g9           source=console
 INFO[0000] There are now 32 pods in the default namespace.        source=console

@@ -5,8 +5,8 @@ import (
 
 	"github.com/loadimpact/k6/js/common"
 	"github.com/loadimpact/k6/js/modules"
-	"github.com/simskij/k6-extension-chaos/internal/k8s/pods"
-	"github.com/simskij/k6-extension-chaos/pkg/k8s/client"
+	"github.com/simskij/xk6-chaos/internal/k8s/pods"
+	"github.com/simskij/xk6-chaos/pkg/k8s/client"
 )
 
 func init() {

@@ -2,7 +2,7 @@ import chaos from 'k6/x/chaos';
 import { Pods } from 'k6/x/chaos/k8s';
 
 export default function () {
-  console.log(`Running simskij/k6-extension-chaos@${chaos.version}.`);
+  console.log(`Running simskij/xk6-chaos@${chaos.version}.`);
   const p = new Pods();
   console.log(
     `There are currently ${p.list().length} pods in the default namespace.`

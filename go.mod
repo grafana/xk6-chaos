@@ -1,4 +1,4 @@
-module github.com/simskij/k6-extension-chaos
+module github.com/simskij/xk6-chaos
 
 go 1.15
 

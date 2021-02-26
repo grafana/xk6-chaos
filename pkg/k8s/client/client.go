@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/simskij/k6-extension-chaos/pkg/k8s/config"
+	"github.com/simskij/xk6-chaos/pkg/k8s/config"
 	"k8s.io/client-go/kubernetes"
 )
 
