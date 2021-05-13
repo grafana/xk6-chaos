@@ -1,7 +1,7 @@
 package chaos
 
 import (
-	"github.com/loadimpact/k6/js/modules"
+	"go.k6.io/k6/js/modules"
 	_ "github.com/simskij/xk6-chaos/internal/k8s" // Register the k8s module as well
 )
 

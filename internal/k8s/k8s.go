@@ -3,10 +3,10 @@ package k8s
 import (
 	"context"
 
-	"github.com/loadimpact/k6/js/common"
-	"github.com/loadimpact/k6/js/modules"
 	"github.com/simskij/xk6-chaos/internal/k8s/pods"
 	"github.com/simskij/xk6-chaos/pkg/k8s/client"
+	"go.k6.io/k6/js/common"
+	"go.k6.io/k6/js/modules"
 )
 
 func init() {
@@ -21,12 +21,12 @@ type K8s struct {
 }
 
 // XPods serves as a constructor of the Pods js class
-func (*K8s) XPods(ctx *context.Context) interface{} {
+func (*K8s) XPods(ctx *context.Context) (interface{}, error) {
 	rt := common.GetRuntime(*ctx)
 	c, err := client.New()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	p := pods.New(c)
-	return common.Bind(rt, p, ctx)
+	return common.Bind(rt, p, ctx), nil
 }
