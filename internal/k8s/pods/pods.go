@@ -19,8 +19,8 @@ func New(client *kubernetes.Clientset) *Pods {
 }
 
 // List pods in a specific namespace
-func (pods *Pods) List(_ context.Context, namespace string) ([]string, error) {
-	podList, err := pods.client.CoreV1().Pods(namespace).List(v1.ListOptions{})
+func (pods *Pods) List(ctx context.Context, namespace string) ([]string, error) {
+	podList, err := pods.client.CoreV1().Pods(namespace).List(ctx, v1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -37,16 +37,16 @@ func (pods *Pods) List(_ context.Context, namespace string) ([]string, error) {
 }
 
 // KillByName kills a specific pod in the specified namespace
-func (pods *Pods) KillByName(_ context.Context, namespace string, podName string) error {
+func (pods *Pods) KillByName(ctx context.Context, namespace string, podName string) error {
 	podsInNamespace := pods.client.CoreV1().Pods(namespace)
-	err := podsInNamespace.Delete(podName, &v1.DeleteOptions{})
+	err := podsInNamespace.Delete(ctx, podName, v1.DeleteOptions{})
 
 	return err
 }
 
 // Status of a pod with a specific name in a specific namespace
-func (pods *Pods) Status(_ context.Context, namespace string, podName string) (coreV1.PodStatus, error) {
-	pod, err := pods.client.CoreV1().Pods(namespace).Get(podName, v1.GetOptions{})
+func (pods *Pods) Status(ctx context.Context, namespace string, podName string) (coreV1.PodStatus, error) {
+	pod, err := pods.client.CoreV1().Pods(namespace).Get(ctx, podName, v1.GetOptions{})
 
 	return pod.Status, err
 }
