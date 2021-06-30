@@ -9,11 +9,11 @@ import (
 // import from JS as "k6/x/chaos/experiments".
 func init() {
 	modules.Register("k6/x/chaos/experiments", &Experiments{
-		Podkillers: &podkillers.Podkillers{Ready: true},
+		Podkiller: podkillers.New(true),
 	})
 }
 
 // This exposes experiment metadata for use in displaying results.
 type Experiments struct {
-    Podkillers *podkillers.Podkillers
+    Podkiller *podkillers.Podkillers
 }
