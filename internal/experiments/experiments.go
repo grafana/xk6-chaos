@@ -1,8 +1,8 @@
 package experiments
 
 import (
-    "go.k6.io/k6/js/modules"
 	"github.com/simskij/xk6-chaos/internal/experiments/podkillers"
+	"go.k6.io/k6/js/modules"
 )
 
 // Register the extension on module initialization, available to
@@ -15,5 +15,5 @@ func init() {
 
 // This exposes experiment metadata for use in displaying results.
 type Experiments struct {
-    Podkiller *podkillers.Podkillers
+	Podkiller *podkillers.Podkillers
 }

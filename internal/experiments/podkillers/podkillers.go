@@ -50,12 +50,22 @@ func (p *Podkillers) GetStartingPods() int {
 func (p *Podkillers) KillPod(namespace string, podName string) error {
 	ctx := context.Background()
 	err := p.pod.KillByName(ctx, namespace, podName)
+	p.AddVictim(podName)
 	return err
 }
 
 // KillPodLike terminates a k8s pod whose name contains string.
 func (p *Podkillers) KillPodLike(namespace string, keyword string) error {
 	ctx := context.Background()
-	err := p.pod.KillByKeyword(ctx, namespace, keyword)
+	podName, err := p.pod.KillByKeyword(ctx, namespace, keyword)
+	p.AddVictim(podName)
+	return err
+}
+
+// KillRandomPod terminates a pod at random.
+func (p *Podkillers) KillRandomPod(namespace string) error {
+	ctx := context.Background()
+	podName, err := p.pod.KillRandom(ctx, namespace)
+	p.AddVictim(podName)
 	return err
 }

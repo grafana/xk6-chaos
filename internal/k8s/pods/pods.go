@@ -3,6 +3,7 @@ package pods
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"strings"
 
 	coreV1 "k8s.io/api/core/v1"
@@ -47,20 +48,32 @@ func (pods *Pods) KillByName(ctx context.Context, namespace string, podName stri
 }
 
 // KillByKeyword kills the first pod with a name that contains the specified keyword
-func (pods *Pods) KillByKeyword(ctx context.Context, namespace string, podKeyword string) error {
+func (pods *Pods) KillByKeyword(ctx context.Context, namespace string, podKeyword string) (string, error) {
 	// Iterate through podnames in list and find one that matches keyword
 	var podsList, err = pods.List(ctx, namespace)
 	var podToCheck = ""
 	for i := 0; i < len(podsList); i++ {
 		podToCheck = podsList[i]
 		if strings.Contains(podToCheck, podKeyword) {
-			fmt.Println(podToCheck + " contains " + podKeyword + "and will be terminated.")
+			fmt.Println(podToCheck + " contains " + podKeyword + " and will be terminated.")
 			break
 		}
 	}
 	var podName = podToCheck
 	err = pods.KillByName(ctx, namespace, podName)
-	return err
+	return podName, err
+}
+
+// KillRandom kills a random pod within a namespace
+func (pods *Pods) KillRandom(ctx context.Context, namespace string) (string, error) {
+	// Randomly choose a pod from the given namespace
+	var podsList, err = pods.List(ctx, namespace)
+	var randomNum = rand.Intn(len(podsList) - 1)
+	var randomPod = podsList[randomNum]
+	fmt.Println(randomPod + " has been selected for termination.")
+	// Kill the random pod by name
+	err = pods.KillByName(ctx, namespace, randomPod)
+	return randomPod, err
 }
 
 // Status of a pod with a specific name in a specific namespace
