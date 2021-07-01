@@ -67,7 +67,8 @@ func (p *Podkillers) SetStartingPods(number int) {
 func (p *Podkillers) GetStartingPods(namespace string) int {
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsBefore = len(podsAlive)
-	// p.SetStartingPods(p.NumOfPodsBefore)
+	dt := time.Now()
+	fmt.Println("[" + dt.Format("2006-Jan-02 15:04:05") + "] Num of pods before: " + strconv.Itoa(p.NumOfPodsBefore))
 	return p.NumOfPodsBefore
 }
 
@@ -76,7 +77,8 @@ func (p *Podkillers) GetNumOfPods(namespace string) int {
 	time.Sleep(5 * time.Second)
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsAfter = len(podsAlive)
-	fmt.Println("Num of pods after: " + strconv.Itoa(p.NumOfPodsAfter))
+	dt := time.Now()
+	fmt.Println("[" + dt.Format("2006-Jan-02 15:04:05") + "] Num of pods after: " + strconv.Itoa(p.NumOfPodsAfter))
 	return p.NumOfPodsAfter
 }
 

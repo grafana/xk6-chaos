@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
+	"time"
 
 	coreV1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,7 +44,8 @@ func (pods *Pods) List(ctx context.Context, namespace string) ([]string, error) 
 func (pods *Pods) KillByName(ctx context.Context, namespace string, podName string) error {
 	podsInNamespace := pods.client.CoreV1().Pods(namespace)
 	err := podsInNamespace.Delete(ctx, podName, v1.DeleteOptions{})
-
+	dt := time.Now()
+	fmt.Println("Pod " + podName + " terminated at " + dt.Format("2006-Jan-02 15:04:05"))
 	return err
 }
 
