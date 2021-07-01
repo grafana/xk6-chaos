@@ -50,7 +50,7 @@ func New(Ready bool, ExperimentNum int) *Podkillers {
 // AddVictim saves the names of pods selected to be terminated.
 func (p *Podkillers) AddVictim(victim string) {
 	victims = append(victims, victim)
-	p.Victims = p.Victims + victim
+	p.Victims = p.Victims + ", " + victim
 }
 
 // GetVictims returns the string array of all pods selected to be terminated.
@@ -67,8 +67,7 @@ func (p *Podkillers) SetStartingPods(number int) {
 func (p *Podkillers) GetStartingPods(namespace string) int {
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsBefore = len(podsAlive)
-	dt := time.Now()
-	fmt.Println("[" + dt.Format("2006-Jan-02 15:04:05") + "] Num of pods before: " + strconv.Itoa(p.NumOfPodsBefore))
+	fmt.Println(p.Timestamp() + "Num of pods before: " + strconv.Itoa(p.NumOfPodsBefore))
 	return p.NumOfPodsBefore
 }
 
@@ -77,8 +76,7 @@ func (p *Podkillers) GetNumOfPods(namespace string) int {
 	time.Sleep(5 * time.Second)
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsAfter = len(podsAlive)
-	dt := time.Now()
-	fmt.Println("[" + dt.Format("2006-Jan-02 15:04:05") + "] Num of pods after: " + strconv.Itoa(p.NumOfPodsAfter))
+	fmt.Println(p.Timestamp() + "Num of pods after: " + strconv.Itoa(p.NumOfPodsAfter))
 	return p.NumOfPodsAfter
 }
 
@@ -88,6 +86,7 @@ func (p *Podkillers) KillPod(namespace string, podName string) error {
 	err := p.pod.KillByName(context.Background(), namespace, podName)
 	p.AddVictim(podName)
 	p.GetNumOfPods(namespace)
+	fmt.Println(p.Timestamp() + "Pod " + podName + " terminated.")
 	return err
 }
 
@@ -97,6 +96,7 @@ func (p *Podkillers) KillPodLike(namespace string, keyword string) error {
 	podName, err := p.pod.KillByKeyword(context.Background(), namespace, keyword)
 	p.AddVictim(podName)
 	p.GetNumOfPods(namespace)
+	fmt.Println(p.Timestamp() + "Pod " + podName + " containing keyword '" + keyword + "' terminated.")
 	return err
 }
 
@@ -106,5 +106,13 @@ func (p *Podkillers) KillRandomPod(namespace string) error {
 	podName, err := p.pod.KillRandom(context.Background(), namespace)
 	p.AddVictim(podName)
 	p.GetNumOfPods(namespace)
+	fmt.Println(p.Timestamp() + "Random pod " + podName + " terminated.")
 	return err
+}
+
+// Timestamp constructs the format of a timestamp for logging purposes
+func (p *Podkillers) Timestamp() string {
+	dt := time.Now()
+	tsMsg := "[xk6-chaos-" + strconv.Itoa(p.Id) + "-" + dt.Format("2006-Jan-02 15:04:05") + "] "
+	return tsMsg
 }

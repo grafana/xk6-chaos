@@ -2,10 +2,8 @@ package pods
 
 import (
 	"context"
-	"fmt"
 	"math/rand"
 	"strings"
-	"time"
 
 	coreV1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -44,8 +42,6 @@ func (pods *Pods) List(ctx context.Context, namespace string) ([]string, error) 
 func (pods *Pods) KillByName(ctx context.Context, namespace string, podName string) error {
 	podsInNamespace := pods.client.CoreV1().Pods(namespace)
 	err := podsInNamespace.Delete(ctx, podName, v1.DeleteOptions{})
-	dt := time.Now()
-	fmt.Println("Pod " + podName + " terminated at " + dt.Format("2006-Jan-02 15:04:05"))
 	return err
 }
 
@@ -57,7 +53,6 @@ func (pods *Pods) KillByKeyword(ctx context.Context, namespace string, podKeywor
 	for i := 0; i < len(podsList); i++ {
 		podToCheck = podsList[i]
 		if strings.Contains(podToCheck, podKeyword) {
-			fmt.Println(podToCheck + " contains keyword '" + podKeyword + "' and will be terminated.")
 			break
 		}
 	}
@@ -72,7 +67,7 @@ func (pods *Pods) KillRandom(ctx context.Context, namespace string) (string, err
 	var podsList, err = pods.List(ctx, namespace)
 	var randomNum = rand.Intn(len(podsList) - 1)
 	var randomPod = podsList[randomNum]
-	fmt.Println(randomPod + " has been selected for termination.")
+
 	// Kill the random pod by name
 	err = pods.KillByName(ctx, namespace, randomPod)
 	return randomPod, err
