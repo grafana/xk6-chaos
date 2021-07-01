@@ -55,7 +55,7 @@ func (pods *Pods) KillByKeyword(ctx context.Context, namespace string, podKeywor
 	for i := 0; i < len(podsList); i++ {
 		podToCheck = podsList[i]
 		if strings.Contains(podToCheck, podKeyword) {
-			fmt.Println(podToCheck + " contains " + podKeyword + " and will be terminated.")
+			fmt.Println(podToCheck + " contains keyword '" + podKeyword + "' and will be terminated.")
 			break
 		}
 	}
