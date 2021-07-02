@@ -6,13 +6,13 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/simskij/xk6-chaos/internal/experiments/summary"
 	"github.com/simskij/xk6-chaos/internal/k8s/pods"
 	"github.com/simskij/xk6-chaos/pkg/k8s/client"
 )
 
 // This exposes podkiller metadata for use in displaying results.
 type Podkillers struct {
-	Ready           bool
 	Id              int    `json:"id"`
 	ExperimentType  string `json:"expType"`
 	NumOfPodsBefore int    `json:"numPodsBefore"`
@@ -21,12 +21,15 @@ type Podkillers struct {
 	pod             *pods.Pods
 }
 
-var victims []string = []string{}
+var ExperimentNumber = 1
+var PodkillerSummary = ""
 
-// var numOfPodsBefore int
+// var victims []string = []string{}
 
 // New creates a new podkiller
-func New(Ready bool, ExperimentNum int) *Podkillers {
+func New() *Podkillers {
+	experimentNum := ExperimentNumber
+	ExperimentNumber++
 	c, err := client.New()
 	p := pods.New(c)
 	if err != nil {
@@ -34,29 +37,37 @@ func New(Ready bool, ExperimentNum int) *Podkillers {
 	}
 	// var expType = "Podkiller"
 	// var desc = ""
-	podkiller := Podkillers{
-		Ready:           true,
-		Id:              ExperimentNum,
-		ExperimentType:  "Pod termination",
-		NumOfPodsBefore: 0,
-		NumOfPodsAfter:  0,
-		Victims:         "",
-		pod:             p,
-	}
-	// return &Podkillers{Ready, ExperimentNum, expType, desc, p}
-	return &podkiller
+	// podkiller := Podkillers{
+	// 	Id:              experimentNum,
+	// 	ExperimentType:  "Pod termination",
+	// 	NumOfPodsBefore: 0,
+	// 	NumOfPodsAfter:  0,
+	// 	Victims:         "",
+	// 	pod:             p,
+	// }
+	return &Podkillers{experimentNum, "Pod termination", 0, 0, "", p}
 }
 
-// AddVictim saves the names of pods selected to be terminated.
-func (p *Podkillers) AddVictim(victim string) {
-	victims = append(victims, victim)
-	p.Victims = p.Victims + ", " + victim
+// AddResults saves the names of pods selected to be terminated.
+func (p *Podkillers) AddResults(namespace string, victim string) {
+	p.GetNumOfPods(namespace)
+
+	sum := summary.GetSummary()
+	sum.AddResult(summary.PodkillerResult{
+		Victim:    victim,
+		Timestamp: p.Timestamp(),
+		PodCount: summary.PodCount{
+			Before: p.NumOfPodsBefore,
+			After:  p.NumOfPodsAfter,
+		},
+	})
 }
 
 // GetVictims returns the string array of all pods selected to be terminated.
-func (p *Podkillers) GetVictims() []string {
-	return victims
-}
+// func (p *Podkillers) GetVictims() []string {
+// 	victims := p.Victims
+// 	return victims
+// }
 
 // SetStartingPods saves the number of pods at the beginning of a test as the "before" state.
 func (p *Podkillers) SetStartingPods(number int) {
@@ -84,8 +95,7 @@ func (p *Podkillers) GetNumOfPods(namespace string) int {
 func (p *Podkillers) KillPod(namespace string, podName string) error {
 	p.GetStartingPods(namespace)
 	err := p.pod.KillByName(context.Background(), namespace, podName)
-	p.AddVictim(podName)
-	p.GetNumOfPods(namespace)
+	p.AddResults(namespace, podName)
 	fmt.Println(p.Timestamp() + "Pod " + podName + " terminated.")
 	return err
 }
@@ -94,8 +104,7 @@ func (p *Podkillers) KillPod(namespace string, podName string) error {
 func (p *Podkillers) KillPodLike(namespace string, keyword string) error {
 	p.GetStartingPods(namespace)
 	podName, err := p.pod.KillByKeyword(context.Background(), namespace, keyword)
-	p.AddVictim(podName)
-	p.GetNumOfPods(namespace)
+	p.AddResults(namespace, podName)
 	fmt.Println(p.Timestamp() + "Pod " + podName + " containing keyword '" + keyword + "' terminated.")
 	return err
 }
@@ -104,8 +113,7 @@ func (p *Podkillers) KillPodLike(namespace string, keyword string) error {
 func (p *Podkillers) KillRandomPod(namespace string) error {
 	p.GetStartingPods(namespace)
 	podName, err := p.pod.KillRandom(context.Background(), namespace)
-	p.AddVictim(podName)
-	p.GetNumOfPods(namespace)
+	p.AddResults(namespace, podName)
 	fmt.Println(p.Timestamp() + "Random pod " + podName + " terminated.")
 	return err
 }
@@ -113,6 +121,19 @@ func (p *Podkillers) KillRandomPod(namespace string) error {
 // Timestamp constructs the format of a timestamp for logging purposes
 func (p *Podkillers) Timestamp() string {
 	dt := time.Now()
-	tsMsg := "[xk6-chaos-" + strconv.Itoa(p.Id) + "-" + dt.Format("2006-Jan-02 15:04:05") + "] "
+	tsMsg := "[xk6-chaos-Podkiller" + strconv.Itoa(p.Id) + "-" + dt.Format("2006-Jan-02 15:04:05") + "] "
 	return tsMsg
+}
+
+func (p *Podkillers) GenerateSummary() string {
+	sum := summary.GetSummary()
+	output := "\n"
+	for i, result := range sum.Results {
+		output += fmt.Sprintf(" Victim #%d: %s at %s\n", i, result.Victim, result.Timestamp)
+	}
+	return output + "\n"
+	// PodkillerSummary = "Podkiller id: " + strconv.Itoa(p.Id) + "\nPodkiller NumofPodsBefore: " + strconv.Itoa(p.NumOfPodsBefore) + "\nPodkiller NumOfPodsAfter: " + strconv.Itoa(p.NumOfPodsAfter) + "\nVictims: " + p.Victims
+	// summary.ChaosSummary = PodkillerSummary
+	// fmt.Println("PodkillerSummary: " + PodkillerSummary)
+	// return PodkillerSummary
 }

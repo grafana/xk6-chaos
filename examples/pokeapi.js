@@ -2,8 +2,10 @@ import http from 'k6/http';
 import { sleep, check } from 'k6';
 import papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';
 import { SharedArray } from 'k6/data';
-import { experiments, podkiller } from 'k6/x/chaos/experiments';
+import { Podkillers } from 'k6/x/chaos/experiments';
 import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
+
+// const podkiller = new Podkillers();
 
 export const options = {
     scenarios: {
@@ -12,16 +14,16 @@ export const options = {
             exec: 'catchEmAll',
             startVUs: 1,
             stages: [
-                { duration: '1m', target: 1 },
+                { duration: '10s', target: 1 },
             ],
             gracefulRampDown: '1s',
         },
         chaos: {
             executor: 'per-vu-iterations',
             exec: 'killPod',
-            vus: 1,
-            iterations: 1,
-            startTime: '5s',
+            vus: 2,
+            iterations: 2,
+            startTime: '1s',
         },
     },
     thresholds: {
@@ -60,43 +62,47 @@ export function ThinkTime() {
 
 export function killPod() {
     
+    const podkiller = new Podkillers();
+    console.log(JSON.stringify(podkiller))
+    
     // Kill chosen pod.
     // podkiller.killPod('default', 'web-7d55cf8588-s6cmz');
-    podkiller.killPodLike('default', 'web');
-    // podkiller.killRandomPod('default');
+    // podkiller.killPodLike('default', 'web');
+    podkiller.killRandomPod('default');
+    
 }
 
-export function generateChaosSummary() {
-    // let victims = podkiller.getVictims();
-    // let numPodsBegin = podkiller.getStartingPods('default');
-    // let numPodsNow = podkiller.getNumOfPods('default');
+// export function generateChaosSummary() {
+//     // let victims = podkiller.getVictims();
+//     // let numPodsBegin = podkiller.getStartingPods('default');
+//     // let numPodsNow = podkiller.getNumOfPods('default');
 
-    console.log('Podkillers object: ' + JSON.stringify(podkiller));
-    let experimentType = JSON.stringify(podkiller.experiment_type);
-    let numPodsBegin = JSON.stringify(podkiller.num_of_pods_before);
-    let victims = JSON.stringify(podkiller.victims);
-    let numPodsNow = JSON.stringify(podkiller.num_of_pods_after);
+//     // console.log('Podkillers object: ' + JSON.stringify(podkiller));
+//     // let experimentType = JSON.stringify(podkiller.experiment_type);
+//     // let numPodsBegin = JSON.stringify(podkiller.num_of_pods_before);
+//     // let victims = JSON.stringify(podkiller.victims);
+//     // let numPodsNow = JSON.stringify(podkiller.num_of_pods_after);
 
-    let chaosSummary = `
+//     // let chaosSummary = `
     
     
-    xk6-CHAOS
-    -----
-    EXPERIMENT: ${experimentType}.
+//     // xk6-CHAOS
+//     // -----
+//     // EXPERIMENT: ${experimentType}.
     
-    Number of pods before termination: ${numPodsBegin}
-    Pod(s) terminated: ${victims}
-    Number of pods at the end of the test: ${numPodsNow}
+//     // Number of pods before termination: ${numPodsBegin}
+//     // Pod(s) terminated: ${victims}
+//     // Number of pods at the end of the test: ${numPodsNow}
 
-    `;
+//     // `;
+    
 
-    return chaosSummary;
-}
+//     return chaosSummary;
+// }
 
 export function handleSummary(data) {
-    
     return {
-        'stdout': textSummary(data, { indent: ' ', enableColors: true}) + generateChaosSummary(),
+        'stdout': textSummary(data, { indent: ' ', enableColors: true}) + new Podkillers().generateSummary(),
         // 'raw-data.json': JSON.stringify(data)
     };
 }
