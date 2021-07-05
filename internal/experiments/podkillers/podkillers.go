@@ -3,7 +3,6 @@ package podkillers
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/simskij/xk6-chaos/internal/experiments/summary"
@@ -13,18 +12,15 @@ import (
 
 // This exposes podkiller metadata for use in displaying results.
 type Podkillers struct {
-	Id              int    `json:"id"`
-	ExperimentType  string `json:"expType"`
-	NumOfPodsBefore int    `json:"numPodsBefore"`
-	NumOfPodsAfter  int    `json:"numPodsAfter"`
-	Victims         string `json:"victims"`
+	Id              int
+	ExperimentType  string
+	NumOfPodsBefore int
+	NumOfPodsAfter  int
+	Victims         string
 	pod             *pods.Pods
 }
 
 var ExperimentNumber = 1
-var PodkillerSummary = ""
-
-// var victims []string = []string{}
 
 // New creates a new podkiller
 func New() *Podkillers {
@@ -35,16 +31,6 @@ func New() *Podkillers {
 	if err != nil {
 		return nil
 	}
-	// var expType = "Podkiller"
-	// var desc = ""
-	// podkiller := Podkillers{
-	// 	Id:              experimentNum,
-	// 	ExperimentType:  "Pod termination",
-	// 	NumOfPodsBefore: 0,
-	// 	NumOfPodsAfter:  0,
-	// 	Victims:         "",
-	// 	pod:             p,
-	// }
 	return &Podkillers{experimentNum, "Pod termination", 0, 0, "", p}
 }
 
@@ -78,7 +64,7 @@ func (p *Podkillers) SetStartingPods(number int) {
 func (p *Podkillers) GetStartingPods(namespace string) int {
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsBefore = len(podsAlive)
-	fmt.Println(p.Timestamp() + "Num of pods before: " + strconv.Itoa(p.NumOfPodsBefore))
+	// fmt.Println(p.Timestamp() + "Num of pods before: " + strconv.Itoa(p.NumOfPodsBefore))
 	return p.NumOfPodsBefore
 }
 
@@ -87,7 +73,7 @@ func (p *Podkillers) GetNumOfPods(namespace string) int {
 	time.Sleep(5 * time.Second)
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsAfter = len(podsAlive)
-	fmt.Println(p.Timestamp() + "Num of pods after: " + strconv.Itoa(p.NumOfPodsAfter))
+	// fmt.Println(p.Timestamp() + "Num of pods after: " + strconv.Itoa(p.NumOfPodsAfter))
 	return p.NumOfPodsAfter
 }
 
@@ -96,7 +82,7 @@ func (p *Podkillers) KillPod(namespace string, podName string) error {
 	p.GetStartingPods(namespace)
 	err := p.pod.KillByName(context.Background(), namespace, podName)
 	p.AddResults(namespace, podName)
-	fmt.Println(p.Timestamp() + "Pod " + podName + " terminated.")
+	// fmt.Println(p.Timestamp() + "Pod " + podName + " terminated.")
 	return err
 }
 
@@ -105,7 +91,7 @@ func (p *Podkillers) KillPodLike(namespace string, keyword string) error {
 	p.GetStartingPods(namespace)
 	podName, err := p.pod.KillByKeyword(context.Background(), namespace, keyword)
 	p.AddResults(namespace, podName)
-	fmt.Println(p.Timestamp() + "Pod " + podName + " containing keyword '" + keyword + "' terminated.")
+	// fmt.Println(p.Timestamp() + "Pod " + podName + " containing keyword '" + keyword + "' terminated.")
 	return err
 }
 
@@ -114,26 +100,22 @@ func (p *Podkillers) KillRandomPod(namespace string) error {
 	p.GetStartingPods(namespace)
 	podName, err := p.pod.KillRandom(context.Background(), namespace)
 	p.AddResults(namespace, podName)
-	fmt.Println(p.Timestamp() + "Random pod " + podName + " terminated.")
+	// fmt.Println(p.Timestamp() + "Random pod " + podName + " terminated.")
 	return err
 }
 
 // Timestamp constructs the format of a timestamp for logging purposes
 func (p *Podkillers) Timestamp() string {
 	dt := time.Now()
-	tsMsg := "[xk6-chaos-Podkiller" + strconv.Itoa(p.Id) + "-" + dt.Format("2006-Jan-02 15:04:05") + "] "
+	tsMsg := dt.Format("2006-Jan-02 15:04:05")
 	return tsMsg
 }
 
 func (p *Podkillers) GenerateSummary() string {
 	sum := summary.GetSummary()
-	output := "\n"
+	output := "\n\nxk6-chaos\n===\n\nPODKILLERS:\n"
 	for i, result := range sum.Results {
-		output += fmt.Sprintf(" Victim #%d: %s at %s\n", i, result.Victim, result.Timestamp)
+		output += fmt.Sprintf(" Victim #%d: %s terminated at %s\n            Pods before: %d; Pods after: %d\n", i, result.Victim, result.Timestamp, result.PodCount.Before, result.PodCount.After)
 	}
 	return output + "\n"
-	// PodkillerSummary = "Podkiller id: " + strconv.Itoa(p.Id) + "\nPodkiller NumofPodsBefore: " + strconv.Itoa(p.NumOfPodsBefore) + "\nPodkiller NumOfPodsAfter: " + strconv.Itoa(p.NumOfPodsAfter) + "\nVictims: " + p.Victims
-	// summary.ChaosSummary = PodkillerSummary
-	// fmt.Println("PodkillerSummary: " + PodkillerSummary)
-	// return PodkillerSummary
 }
