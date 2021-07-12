@@ -30,7 +30,3 @@ func (*Experiments) XPodkillers(ctx *context.Context) (interface{}, error) {
 	p := podkillers.New()
 	return common.Bind(rt, p, ctx), nil
 }
-
-func (*Experiments) GenerateChaosSummary() string {
-	return ChaosSummary
-}
