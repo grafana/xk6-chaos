@@ -49,12 +49,6 @@ func (p *Podkillers) AddResults(namespace string, victim string) {
 	})
 }
 
-// GetVictims returns the string array of all pods selected to be terminated.
-// func (p *Podkillers) GetVictims() []string {
-// 	victims := p.Victims
-// 	return victims
-// }
-
 // SetStartingPods saves the number of pods at the beginning of a test as the "before" state.
 func (p *Podkillers) SetStartingPods(number int) {
 	p.NumOfPodsBefore = number
@@ -64,7 +58,6 @@ func (p *Podkillers) SetStartingPods(number int) {
 func (p *Podkillers) GetStartingPods(namespace string) int {
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsBefore = len(podsAlive)
-	// fmt.Println(p.Timestamp() + "Num of pods before: " + strconv.Itoa(p.NumOfPodsBefore))
 	return p.NumOfPodsBefore
 }
 
@@ -73,7 +66,6 @@ func (p *Podkillers) GetNumOfPods(namespace string) int {
 	time.Sleep(5 * time.Second)
 	var podsAlive, _ = p.pod.List(context.Background(), namespace)
 	p.NumOfPodsAfter = len(podsAlive)
-	// fmt.Println(p.Timestamp() + "Num of pods after: " + strconv.Itoa(p.NumOfPodsAfter))
 	return p.NumOfPodsAfter
 }
 
@@ -82,7 +74,6 @@ func (p *Podkillers) KillPod(namespace string, podName string) error {
 	p.GetStartingPods(namespace)
 	err := p.pod.KillByName(context.Background(), namespace, podName)
 	p.AddResults(namespace, podName)
-	// fmt.Println(p.Timestamp() + "Pod " + podName + " terminated.")
 	return err
 }
 
@@ -91,7 +82,6 @@ func (p *Podkillers) KillPodLike(namespace string, keyword string) error {
 	p.GetStartingPods(namespace)
 	podName, err := p.pod.KillByKeyword(context.Background(), namespace, keyword)
 	p.AddResults(namespace, podName)
-	// fmt.Println(p.Timestamp() + "Pod " + podName + " containing keyword '" + keyword + "' terminated.")
 	return err
 }
 
@@ -100,7 +90,6 @@ func (p *Podkillers) KillRandomPod(namespace string) error {
 	p.GetStartingPods(namespace)
 	podName, err := p.pod.KillRandom(context.Background(), namespace)
 	p.AddResults(namespace, podName)
-	// fmt.Println(p.Timestamp() + "Random pod " + podName + " terminated.")
 	return err
 }
 
