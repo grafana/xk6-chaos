@@ -104,7 +104,14 @@ func (p *Podkillers) GenerateSummary() string {
 	sum := summary.GetSummary()
 	output := "\n\nxk6-chaos\n===\n\nPODKILLERS:\n"
 	for i, result := range sum.Results {
-		output += fmt.Sprintf(" Victim #%d: %s terminated at %s\n            Pods before: %d; Pods 5s after termination: %d\n", i, result.Victim, result.Timestamp, result.PodCount.Before, result.PodCount.After)
+		output += fmt.Sprintf(
+		    " Victim #%d: %s terminated at %s\n            Pods before: %d; Pods 5s after termination: %d\n",
+		    i, 
+		    result.Victim, 
+		    result.Timestamp, 
+		    result.PodCount.Before, 
+		    result.PodCount.After,
+		)
 	}
 	return output + "\n"
 }
