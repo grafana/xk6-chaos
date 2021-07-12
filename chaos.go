@@ -14,7 +14,7 @@ func init() {
 	modules.Register("k6/x/chaos", &Chaos{
 		Version: version,
 	})
-	fmt.Println("Running simskij/xk6-chaos@$" + version)
+	fmt.Println("Running k6io/xk6-chaos@$" + version)
 }
 
 // Chaos is the main export of the chaos engineering extension
