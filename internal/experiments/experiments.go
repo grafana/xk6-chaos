@@ -8,7 +8,6 @@ import (
 	"go.k6.io/k6/js/modules"
 )
 
-var ChaosSummary string
 
 // Register the extension on module initialization, available to
 // import from JS as "k6/x/chaos/experiments".
