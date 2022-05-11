@@ -3,7 +3,7 @@ package experiments
 import (
 	"context"
 
-	"github.com/simskij/xk6-chaos/internal/experiments/podkillers"
+	"github.com/grafana/xk6-chaos/internal/experiments/podkillers"
 	"go.k6.io/k6/js/common"
 	"go.k6.io/k6/js/modules"
 )

@@ -3,8 +3,8 @@ package k8s
 import (
 	"context"
 
-	"github.com/simskij/xk6-chaos/internal/k8s/pods"
-	"github.com/simskij/xk6-chaos/pkg/k8s/client"
+	"github.com/grafana/xk6-chaos/internal/k8s/pods"
+	"github.com/grafana/xk6-chaos/pkg/k8s/client"
 	"go.k6.io/k6/js/common"
 	"go.k6.io/k6/js/modules"
 )
