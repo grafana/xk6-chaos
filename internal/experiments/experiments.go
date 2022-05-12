@@ -35,13 +35,13 @@ type Experiments struct {
 func (e *Experiments) Exports() modules.Exports {
 	return modules.Exports{
 		Named: map[string]interface{}{
-			"PodKillers": e.XPodKillers,
+			"Podkillers": e.XPodkillers,
 		},
 	}
 }
 
 // XPodkillers serves as a constructor of the Podkillers js class
-func (e *Experiments) XPodKillers(goja.ConstructorCall) goja.Object {
+func (e *Experiments) XPodkillers(goja.ConstructorCall) goja.Object {
 	rt := e.vu.Runtime()
 	p := podkillers.New()
 	return *rt.ToValue(p).ToObject(rt)
