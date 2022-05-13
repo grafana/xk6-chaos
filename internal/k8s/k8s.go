@@ -37,12 +37,12 @@ func (k *K8s) Exports() modules.Exports {
 }
 
 // XPods serves as a constructor of the Pods js class
-func (k *K8s) XPods(goja.ConstructorCall) goja.Object {
+func (k *K8s) XPods(goja.ConstructorCall) *goja.Object {
 	rt := k.vu.Runtime()
 	c, err := client.New()
 	if err != nil {
 		common.Throw(rt, err)
 	}
 	p := pods.New(c)
-	return *rt.ToValue(p).ToObject(rt)
+	return rt.ToValue(p).ToObject(rt)
 }

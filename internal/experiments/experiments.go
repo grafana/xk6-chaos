@@ -41,8 +41,8 @@ func (e *Experiments) Exports() modules.Exports {
 }
 
 // XPodkillers serves as a constructor of the Podkillers js class
-func (e *Experiments) XPodkillers(goja.ConstructorCall) goja.Object {
+func (e *Experiments) XPodkillers(goja.ConstructorCall) *goja.Object {
 	rt := e.vu.Runtime()
 	p := podkillers.New()
-	return *rt.ToValue(p).ToObject(rt)
+	return rt.ToValue(p).ToObject(rt)
 }
