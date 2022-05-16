@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/simskij/xk6-chaos/internal/experiments/summary"
-	"github.com/simskij/xk6-chaos/internal/k8s/pods"
-	"github.com/simskij/xk6-chaos/pkg/k8s/client"
+	"github.com/grafana/xk6-chaos/internal/experiments/summary"
+	"github.com/grafana/xk6-chaos/internal/k8s/pods"
+	"github.com/grafana/xk6-chaos/pkg/k8s/client"
 )
 
 // This exposes podkiller metadata for use in displaying results.

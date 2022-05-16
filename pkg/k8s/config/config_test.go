@@ -7,7 +7,7 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/simskij/xk6-chaos/pkg/k8s/config"
+	"github.com/grafana/xk6-chaos/pkg/k8s/config"
 	"k8s.io/client-go/util/homedir"
 )
 
