@@ -3,9 +3,10 @@ module github.com/grafana/xk6-chaos
 go 1.17
 
 require (
+	github.com/dop251/goja v0.0.0-20220405120441-9037c2b61cbf
 	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
-	go.k6.io/k6 v0.38.1
+	go.k6.io/k6 v0.38.3
 	k8s.io/api v0.21.0
 	k8s.io/apimachinery v0.21.0
 	k8s.io/client-go v0.21.0
@@ -14,7 +15,6 @@ require (
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.4.1-0.20201116162257-a2a8dda75c91 // indirect
-	github.com/dop251/goja v0.0.0-20220405120441-9037c2b61cbf // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-logr/logr v0.4.0 // indirect
