@@ -3,6 +3,7 @@ package client
 import (
 	"github.com/grafana/xk6-chaos/pkg/k8s/config"
 	"k8s.io/client-go/kubernetes"
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 )
 
 // New creates a new k8s client
